@@ -6,9 +6,20 @@
   --border: #e2e5ea;
   --accent: #5c940d;
   --on-accent: #ffffff;
-  --tile: #e3e7ec;
-  --pipe: #8d96a3;
+  --bed: #b8e08f;
+  --bed-2: #a9d67c;
+  --bed-edge: #8cc265;
+  --pipe: #d5dbe2;
+  --pipe-edge: #8a96a3;
+  --channel: #6b7785;
   --water: #1c7ed6;
+  --handle: #e8590c;
+  --pot: #e07a4f;
+  --pot-rim: #c4603a;
+  --stem: #37b24d;
+  --leaf: #51cf66;
+  --petal: #f06595;
+  --flower-middle: #fcc419;
   --wrong: #e5484d;
   --selected: #f2b200;
   --good: #2fa36b;
@@ -35,9 +46,20 @@
     --border: #2c3038;
     --accent: #94d82d;
     --on-accent: #1b2a05;
-    --tile: #232730;
-    --pipe: #5a6270;
+    --bed: #2c4a1f;
+    --bed-2: #284419;
+    --bed-edge: #1f3616;
+    --pipe: #8e99a6;
+    --pipe-edge: #4d5662;
+    --channel: #3a414b;
     --water: #4dabf7;
+    --handle: #f76707;
+    --pot: #c9683f;
+    --pot-rim: #a9532f;
+    --stem: #2f9e44;
+    --leaf: #40c057;
+    --petal: #f06595;
+    --flower-middle: #fcc419;
     --wrong: #ff6b6f;
     --good: #4cc38a;
   }
@@ -206,23 +228,26 @@ h2 {
   min-height: 0;
 }
 
-/* Board: the tap, the tiles and the flower, as big as fits */
+/* Board: the tap, a bed of grass with the pipes, and the flower, as big
+   as fits. The tiles touch, so the pipes join up. */
 
 .board {
-  --gap: 4px;
+  --cols: calc(var(--size) + 2);
+  --rows: calc(var(--size) + var(--top));
   display: grid;
-  grid-template-columns: 0.7fr repeat(var(--size), minmax(0, 1fr)) 0.7fr;
-  grid-template-rows: repeat(var(--rows), auto);
-  gap: var(--gap);
-  /* As wide as the stage allows while every row still fits. */
-  width: min(
-    100cqw,
-    480px,
-    (100cqh - (var(--rows) - 1) * var(--gap)) / var(--rows) * var(--cols) +
-      (var(--cols) - 1) * var(--gap)
-  );
+  grid-template-columns: repeat(var(--cols), minmax(0, 1fr));
+  --width: min(100cqw, 520px, 100cqh / var(--rows) * var(--cols));
+  width: var(--width);
+  padding-top: calc(var(--width) / var(--cols) * var(--top));
   user-select: none;
   -webkit-user-select: none;
+}
+
+.board__bed {
+  border-radius: 12px;
+  background: repeating-conic-gradient(var(--bed) 0 25%, var(--bed-2) 0 50%) 0
+    0 / calc(200% / var(--size)) calc(200% / var(--size));
+  box-shadow: 0 0 0 5px var(--bed-edge);
 }
 
 .tile {
@@ -230,9 +255,8 @@ h2 {
   min-width: 0;
   padding: 0;
   border: 0;
-  border-radius: 14%;
-  background: var(--tile);
-  overflow: hidden;
+  border-radius: 12%;
+  background: none;
 }
 
 .tile:disabled {
@@ -240,13 +264,8 @@ h2 {
   cursor: default;
 }
 
-/* Empty tiles are only a little darker than the board around them. */
-div.tile {
-  background: color-mix(in srgb, var(--tile) 45%, transparent);
-}
-
 .tile:active:not(:disabled) {
-  background: color-mix(in srgb, var(--tile), var(--text) 8%);
+  background: rgb(0 0 0 / 0.08);
 }
 
 .pipe {
@@ -254,61 +273,101 @@ div.tile {
   width: 100%;
   height: 100%;
   overflow: visible;
+  transition: transform 0.18s ease-out;
+}
+
+.pipe path {
+  fill: none;
+  stroke-linejoin: round;
+}
+
+.pipe__edge {
+  stroke: var(--pipe-edge);
+  stroke-width: 38;
+}
+
+.pipe__body {
   stroke: var(--pipe);
+  stroke-width: 31;
+}
+
+.pipe__collar {
   fill: var(--pipe);
-  stroke-width: 30;
-  transition:
-    transform 0.18s ease-out,
-    stroke 0.2s ease-out,
-    fill 0.2s ease-out;
+  stroke: var(--pipe-edge);
+  stroke-width: 3;
 }
 
 /* Water only flows in: drying out happens at once. */
-.pipe:not(.pipe--wet) {
-  transition-delay: 0s !important;
+.pipe__water {
+  stroke: var(--channel);
+  stroke-width: 15;
+  transition: stroke 0.2s ease-out;
 }
 
-.tile circle {
-  stroke: none;
-}
-
-.pipe--wet {
+.pipe--wet .pipe__water {
   stroke: var(--water);
-  fill: var(--water);
+  transition-delay: var(--delay, 0s);
 }
 
 .end {
   align-self: center;
-  aspect-ratio: 0.7;
   width: 100%;
+  aspect-ratio: 1;
   height: auto;
 }
 
-.end__shine {
-  fill: #ffffff;
-  stroke: none;
-  opacity: 0.5;
+.tap__body,
+.tap__stem {
+  fill: var(--pipe);
+  stroke: var(--pipe-edge);
+  stroke-width: 3;
 }
 
-.end__flower {
-  font-size: 76px;
-  stroke: none;
-  fill: currentColor;
+.tap__handle {
+  fill: var(--handle);
+  stroke: color-mix(in srgb, var(--handle), #000 25%);
+  stroke-width: 3;
 }
 
-.board--solved .end--flower .end__flower {
-  transform-origin: 58px 54px;
+.pipe .pot {
+  fill: var(--pot);
+}
+
+.pot__rim {
+  fill: var(--pot-rim);
+}
+
+.pipe .flower__stem {
+  stroke: var(--stem);
+  stroke-width: 6;
+  stroke-linecap: round;
+}
+
+.flower__leaf {
+  fill: var(--leaf);
+}
+
+.flower__petal {
+  fill: var(--petal);
+}
+
+.flower__middle {
+  fill: var(--flower-middle);
+}
+
+.flower__head {
+  transform-origin: 62px -32px;
   transform-box: view-box;
-  animation: bloom 0.5s ease-out both;
-  animation-delay: inherit;
+  animation: bloom 0.6s ease-out both;
+  animation-delay: var(--delay, 0s);
 }
 
 @keyframes bloom {
   from {
-    transform: scale(0.5);
+    transform: scale(0.2);
   }
   60% {
-    transform: scale(1.25);
+    transform: scale(1.2);
   }
 }
 
@@ -347,10 +406,11 @@ div.tile {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .pipe {
+  .pipe,
+  .pipe__water {
     transition: none !important;
   }
-  .end__flower {
+  .flower__head {
     animation: none !important;
   }
   .solved {

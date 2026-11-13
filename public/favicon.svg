@@ -1,5 +1,20 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
   <rect width="64" height="64" rx="14" fill="#5c940d"/>
-  <path d="M4 22 H28 V44 H60" fill="none" stroke="#1864ab" stroke-width="13" stroke-linejoin="round"/>
-  <path d="M4 22 H28 V44 H60" fill="none" stroke="#74c0fc" stroke-width="7" stroke-linejoin="round"/>
+  <g transform="translate(3 6) scale(0.88)">
+  <path d="M-10 44 H22 V30 H38" fill="none" stroke="#8a96a3" stroke-width="13" stroke-linejoin="round"/>
+  <path d="M-10 44 H22 V30 H38" fill="none" stroke="#d5dbe2" stroke-width="10" stroke-linejoin="round"/>
+  <path d="M-10 44 H22 V30 H38" fill="none" stroke="#1c7ed6" stroke-width="5" stroke-linejoin="round"/>
+  <path d="M46 14 C 44 20, 48 24, 46 30" fill="none" stroke="#37b24d" stroke-width="3" stroke-linecap="round"/>
+  <ellipse cx="40" cy="22" rx="5" ry="2.6" fill="#51cf66" transform="rotate(-30 40 22)"/>
+  <g fill="#f06595">
+    <circle cx="46" cy="7" r="5"/>
+    <circle cx="46" cy="7" r="5" transform="rotate(72 46 13)"/>
+    <circle cx="46" cy="7" r="5" transform="rotate(144 46 13)"/>
+    <circle cx="46" cy="7" r="5" transform="rotate(216 46 13)"/>
+    <circle cx="46" cy="7" r="5" transform="rotate(288 46 13)"/>
+  </g>
+  <circle cx="46" cy="13" r="3.6" fill="#fcc419"/>
+  <path d="M36 34 H58 L55 56 H39 Z" fill="#e07a4f"/>
+  <rect x="34" y="29" width="26" height="7" rx="2.5" fill="#c4603a"/>
+  </g>
 </svg>
