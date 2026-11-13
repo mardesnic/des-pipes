@@ -4,6 +4,9 @@ import type { Strings } from '../lib/i18n';
 // How long the water takes to go through one tile, in milliseconds.
 export const FLOW_MS = 70;
 
+// How long the flower takes to open, as in the bloom animation.
+export const BLOOM_MS = 600;
+
 // Where each open side of a pipe meets the edge of its tile.
 const EDGE: Record<number, string> = {
   [N]: '50 0',

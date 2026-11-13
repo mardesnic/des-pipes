@@ -376,7 +376,7 @@ h2 {
 .solved {
   text-align: center;
   gap: 8px;
-  animation: pop 0.3s ease-out;
+  animation: pop 0.3s ease-out both;
 }
 
 .solved h2 {

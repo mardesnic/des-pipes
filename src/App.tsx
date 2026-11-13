@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-import { Board, FLOW_MS } from './components/Board';
+import { BLOOM_MS, Board, FLOW_MS } from './components/Board';
 import { HomeLink } from './components/HomeLink';
 import { Icon } from './components/Icon';
 import { NewGame, SettingsView } from './components/Menu';
@@ -14,6 +14,7 @@ import {
   tapTile,
   water,
   type Level,
+  type Round,
   type Stats,
   type Store,
 } from './lib/game';
@@ -65,6 +66,8 @@ export default function App() {
   };
 
   const solved = round && isSolved(round);
+  // When the flower has opened: the water runs to it, then it blooms.
+  const bloomed = (r: Round) => water(r).size * FLOW_MS + BLOOM_MS;
 
   const onTile = (tile: number) => {
     if (!round) return;
@@ -75,13 +78,10 @@ export default function App() {
     if (isSolved(next)) {
       plop('flow');
       setStats(recordWin(stats, next));
-      setTimeout(
-        () => {
-          setCelebrating(true);
-          cheer();
-        },
-        reached * FLOW_MS + 300
-      );
+      setTimeout(() => {
+        setCelebrating(true);
+        cheer();
+      }, bloomed(next));
     } else plop(reached > water(round).size ? 'flow' : 'turn');
   };
 
@@ -142,7 +142,10 @@ export default function App() {
           </div>
 
           {solved && (
-            <section className='card solved'>
+            <section
+              className='card solved'
+              style={{ animationDelay: `${bloomed(round)}ms` }}
+            >
               <h2>{t.solved}</h2>
               <div className='solved__actions'>
                 <button className='button' onClick={() => start(round.level)}>
